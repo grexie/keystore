@@ -45,7 +45,7 @@ jobs:
       - if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
       - run: yarn build
-      - run: npm run release patch --github.release
+      - run: npm run release patch --github.release -vv
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
