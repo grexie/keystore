@@ -20,9 +20,8 @@ jobs:
       - if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
       - run: yarn build
-      - run: yarn ganache &
-      - name: test
-        run: yarn test
+      #- name: test
+      #  run: yarn test
 
   publish:
     name: publish
