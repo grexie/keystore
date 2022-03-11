@@ -20,7 +20,10 @@
     "plugins": {
       "release-it-yarn-workspaces": true
     },
-    "npm": false
+    "npm": false,
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org"
+    }
   },
   "version": "0.1.4"
 }
