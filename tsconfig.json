@@ -1,0 +1,15 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/keystore" },
+    {
+      "path": "packages/keystore-aws-secrets-manager"
+    },
+    {
+      "path": "packages/keystore-rsa"
+    },
+    {
+      "path": "packages/keystore-web3"
+    },
+  ],
+}
