@@ -10,5 +10,11 @@
     "build:esm": "tsc",
     "build:cjs": "tsc --module commonjs --outDir lib/cjs"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "aws-sdk": "^2.1091.0"
+  },
+  "peerDependencies": {
+    "@grexie/keystore": "^0.1.6",
+    "aws-sdk": "^2.1091.0"
+  }
 }
