@@ -20,7 +20,7 @@
     "plugins": {
       "release-it-yarn-workspaces": true
     },
-    "npm": false
+    "npm": true
   },
   "version": "0.1.3"
 }
