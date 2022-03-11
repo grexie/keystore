@@ -6,7 +6,7 @@
   "scripts": {
     "run-all": "ts-node --transpile-only scripts/run-all.ts",
     "build": "tsc --build --force",
-    "release": "release-it -- minor --ci"
+    "release": "release-it -- patch --ci"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
