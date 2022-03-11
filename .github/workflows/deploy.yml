@@ -33,6 +33,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
+      - run: |
+          git config --global user.email "hello@grexie.com"
+          git config --global user.name "Grexie Bot"
       - uses: actions/checkout@v2
       - id: cache-modules
         uses: actions/cache@v1
