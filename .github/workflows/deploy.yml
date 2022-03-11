@@ -34,9 +34,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org'
       - run: |
-          git config --global user.email "hello@grexie.com"
-          git config --global user.name "Grexie Bot"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global user.name "${GITHUB_ACTOR}"
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - id: cache-modules
         uses: actions/cache@v1
         with:
@@ -45,7 +47,7 @@ jobs:
       - if: steps.cache-modules.outputs.cache-hit != 'true'
         run: yarn --frozen-lockfile
       - run: yarn build
-      - run: npm run release patch --github.release -vv
+      - run: npm run release patch --github.release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
