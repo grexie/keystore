@@ -1,6 +1,6 @@
 {
   "name": "@grexie/keystore",
-  "version": "0.1.6",
+  "version": "0.0.1",
   "license": "MIT",
   "repository": "github:grexie/keystore/packages/keystore",
   "main": "lib/index.js",
