@@ -6,7 +6,7 @@
   "scripts": {
     "run-all": "ts-node --transpile-only scripts/run-all.ts",
     "build": "tsc --build --force",
-    "release": "release-it -- patch --ci"
+    "release": "release-it"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
@@ -20,10 +20,7 @@
     "plugins": {
       "release-it-yarn-workspaces": true
     },
-    "npm": false,
-    "publishConfig": {
-      "registry": "https://registry.npmjs.org"
-    }
+    "npm": false
   },
   "version": "0.1.6"
 }
