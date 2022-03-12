@@ -1,12 +1,12 @@
 {
   "name": "@grexie/keystore-example-server",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "license": "MIT",
   "private": true,
   "scripts": {
     "start": "ts-node --transpile-only src/index"
   },
   "dependencies": {
-    "@grexie/keystore-server": "0.1.11"
+    "@grexie/keystore-server": "0.1.12"
   }
 }
