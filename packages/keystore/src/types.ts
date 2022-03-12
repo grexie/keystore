@@ -10,13 +10,17 @@ export interface Hydrator<T> {
 }
 
 export interface Persistor<T> {
-  (secret: T | null): PromiseLike<Key> | Key;
+  (secret: T | null):
+    | PromiseLike<Key | null | undefined>
+    | Key
+    | null
+    | undefined;
 }
 
 export interface KeyStore<T> extends EventEmitter {
   get secret(): Promise<T | null>;
   setSecret(secret: T | null): Promise<T | null>;
-  rotateSecret(): Promise<T>;
+  rotateSecret(): Promise<T | null>;
   restoreSecret(id: string): Promise<void>;
 }
 
@@ -25,7 +29,7 @@ export interface ProviderOptions<T> {
   hydrator: Hydrator<T>;
 }
 
-export interface FactoryOptions<O extends Object, T> {
+export interface FactoryOptions<T, O extends Object = Object> {
   provider: Provider<O, T>;
 }
 
@@ -34,7 +38,7 @@ export type Provider<O extends Object, T = any> = new (
 ) => KeyStore<T>;
 
 export type Factory<T> = <O extends Object>(
-  options: O & FactoryOptions<O, T>
+  options: O & FactoryOptions<T, O>
 ) => KeyStore<T>;
 
 export const createKeyStoreFactory =
@@ -45,3 +49,32 @@ export const createKeyStoreFactory =
       persistor,
       hydrator,
     });
+
+interface KeyStoreOptions<T> {
+  idField: string;
+  create?: () => T;
+}
+
+export const createJSONKeyStoreFactory = <T>({
+  idField,
+  create,
+}: KeyStoreOptions<T>) =>
+  createKeyStoreFactory<T>({
+    async persistor(key) {
+      if (!key) {
+        if (!create) {
+          return;
+        }
+
+        key = create();
+      }
+
+      return {
+        id: key[idField],
+        key: Buffer.from(JSON.stringify(key), 'utf8'),
+      };
+    },
+    async hydrator(buffer) {
+      return JSON.parse(buffer.toString('utf8'));
+    },
+  });

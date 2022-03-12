@@ -2,6 +2,7 @@ import { createKeyStoreClient } from '@grexie/keystore-client';
 import { KeyPair } from '@grexie/keystore-rsa';
 import { Account } from 'web3-core';
 import * as assert from 'assert';
+import { randomUUID } from 'crypto';
 
 const client = createKeyStoreClient({
   key: 'AUTH_KEY',
@@ -13,6 +14,7 @@ const account1 = client.createKeyStore<Account>('ACCOUNT1');
 const account2 = client.createKeyStore<Account>('ACCOUNT2');
 const account3 = client.createKeyStore<Account>('ACCOUNT3');
 const keyPair1 = client.createKeyStore<KeyPair>('KEYPAIR1');
+const uuid1 = client.createKeyStore<any>('UUID1');
 
 const main = async () => {
   const original = await account1.secret;
@@ -42,6 +44,12 @@ const main = async () => {
   });
 
   await keyPair1.rotateSecret();
+
+  console.info('UUID1', await uuid1.secret);
+
+  await uuid1.setSecret({ id: randomUUID() });
+
+  console.info('UUID1', await uuid1.secret);
 
   client.disconnect();
 };

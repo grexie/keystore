@@ -33,7 +33,7 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
   readonly #pubsub?: PubSub | (() => Promise<PubSub>);
   #subscriber?: PubSub;
   #publisher?: PubSub;
-  #secret?: Promise<T>;
+  #secret: Promise<T | null>;
   #running: boolean = false;
   readonly #name: string;
   readonly #hydrator: Hydrator<T>;
@@ -166,6 +166,10 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
 
   async setSecret(secret: T | null) {
     const key = await this.#persistor(secret);
+
+    if (!key) {
+      return null;
+    }
 
     await this.#setSecret(key.id, key.key.toString('base64'));
 

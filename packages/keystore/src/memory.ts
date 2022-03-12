@@ -81,6 +81,10 @@ const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
   async setSecret(secret: T | null): Promise<T> {
     const key = await this.#persistor(secret);
 
+    if (!key) {
+      return this.#secret;
+    }
+
     await this.#setSecret(key.id, key.key);
     return this.#secret;
   }
