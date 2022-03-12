@@ -1,0 +1,9 @@
+.gitignore
+.prettierrc
+.github/
+build/
+src/
+scripts/
+tsconfig.json
+tsconfig.tsbuildinfo
+yarn.lock

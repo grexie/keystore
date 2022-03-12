@@ -5,6 +5,7 @@ import {
   KeyStore,
   ProviderOptions,
 } from './types';
+import { EventEmitter } from 'events';
 
 interface MemoryProviderOptions<T = any> {
   ttl?: number;
@@ -12,6 +13,7 @@ interface MemoryProviderOptions<T = any> {
 }
 
 const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
+  extends EventEmitter
   implements KeyStore<T>
 {
   #start: Promise<void>;
@@ -33,6 +35,7 @@ const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
     ttl = 0,
     initialSecret,
   }: ProviderOptions<T> & MemoryProviderOptions<T>) {
+    super();
     this.#persistor = persistor;
     this.#hydrator = hydrator;
     this.#ttl = ttl;
@@ -71,14 +74,14 @@ const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
     }
 
     this.#secretId = id;
+    this.#secret = Promise.resolve(this.#hydrator(key));
+    this.emit('update', await this.#secret);
   }
 
   async setSecret(secret: T | null): Promise<T> {
     const key = await this.#persistor(secret);
 
     await this.#setSecret(key.id, key.key);
-
-    this.#secret = Promise.resolve(this.#hydrator(key.key));
     return this.#secret;
   }
 

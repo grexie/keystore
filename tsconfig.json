@@ -11,5 +11,11 @@
     {
       "path": "packages/keystore-web3"
     },
+    {
+      "path": "packages/keystore-server"
+    },
+    {
+      "path": "packages/keystore-client"
+    },
   ],
 }

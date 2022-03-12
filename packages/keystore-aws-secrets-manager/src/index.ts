@@ -5,6 +5,7 @@ import {
   Persistor,
   KeyStore,
 } from '@grexie/keystore';
+import { EventEmitter } from 'events';
 import { AWSError, SecretsManager } from 'aws-sdk';
 import { SecretBinaryType } from 'aws-sdk/clients/secretsmanager';
 
@@ -25,6 +26,7 @@ export interface SecretsManagerProviderOptions {
 }
 
 const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
+  extends EventEmitter
   implements KeyStore<T>
 {
   readonly #secretsManager: SecretsManager;
@@ -44,6 +46,7 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
     secretsManager,
     pubsub,
   }: ProviderOptions<T> & SecretsManagerProviderOptions) {
+    super();
     this.#persistor = persistor;
     this.#hydrator = hydrator;
     this.#name = name;
@@ -156,6 +159,9 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
     }
 
     await this.#publisher?.publish(`secret:${this.#name}`, '');
+
+    const secret = await this.#hydrator(Buffer.from(key.toString(), 'base64'));
+    this.emit('update', secret);
   }
 
   async setSecret(secret: T | null) {

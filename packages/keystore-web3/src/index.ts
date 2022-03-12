@@ -1,10 +1,10 @@
 import Web3 from 'web3';
-import { Account as Web3Account } from 'web3-core';
+import { Account } from 'web3-core';
 import * as ethUtil from 'ethereumjs-util';
 import { createKeyStoreFactory } from '@grexie/keystore';
 
-const createWeb3KeyStore = createKeyStoreFactory({
-  async persistor(account: Web3Account) {
+const createWeb3KeyStore = createKeyStoreFactory<Account>({
+  async persistor(account: Account) {
     if (!account) {
       const web3 = new Web3();
       account = web3.eth.accounts.create();
@@ -16,7 +16,7 @@ const createWeb3KeyStore = createKeyStoreFactory({
     };
   },
 
-  async hydrator(buffer): Promise<Web3Account> {
+  async hydrator(buffer): Promise<Account> {
     const web3 = new Web3();
     const account = web3.eth.accounts.privateKeyToAccount(
       ethUtil.bufferToHex(buffer)

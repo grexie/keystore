@@ -1,13 +1,13 @@
 import * as crypto from 'crypto';
 import { createKeyStoreFactory } from '@grexie/keystore';
 
-interface KeyPair {
+export interface KeyPair {
   id: string;
   publicKey: string;
   privateKey: string;
 }
 
-const createRSAKeyStore = createKeyStoreFactory({
+const createRSAKeyStore = createKeyStoreFactory<KeyPair>({
   async persistor(keyPair: KeyPair) {
     if (!keyPair) {
       keyPair = await new Promise((resolve, reject) => {

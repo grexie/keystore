@@ -1,3 +1,5 @@
+import { EventEmitter } from 'events';
+
 export interface Key {
   id: string;
   key: Buffer;
@@ -11,7 +13,7 @@ export interface Persistor<T> {
   (secret: T | null): PromiseLike<Key> | Key;
 }
 
-export interface KeyStore<T> {
+export interface KeyStore<T> extends EventEmitter {
   get secret(): Promise<T | null>;
   setSecret(secret: T | null): Promise<T | null>;
   rotateSecret(): Promise<T>;

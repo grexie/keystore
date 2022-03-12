@@ -1,0 +1,22 @@
+{
+  "name": "@grexie/keystore-client",
+  "version": "0.1.9",
+  "license": "MIT",
+  "repository": "github:grexie/keystore/packages/keystore-client",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs"
+  },
+  "peerDependencies": {
+    "@grexie/keystore": "^0.1.9"
+  },
+  "dependencies": {
+    "ws": "^8.5.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.3"
+  }
+}
