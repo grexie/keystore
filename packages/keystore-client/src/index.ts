@@ -159,7 +159,7 @@ export class KeyStoreClient {
     }
   }
 
-  createKeyStore<T>(name: string) {
+  createKeyStore<T>(name: string): KeyStore<T> {
     const emitter = new EventEmitter();
 
     this.#subscribe(name, (secret: T) => {
