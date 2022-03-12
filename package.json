@@ -21,6 +21,9 @@
     "plugins": {
       "release-it-yarn-workspaces": true
     },
+    "workspaces": [
+      "packages/*"
+    ],
     "npm": false
   },
   "version": "0.1.11"
