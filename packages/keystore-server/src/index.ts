@@ -129,7 +129,11 @@ interface Connection {
   ws: WebSocket;
 }
 
-const createKeyStoreServer = (options: ServerOptions) => {
+interface KeyStoreServer {
+  connections: number;
+}
+
+const createKeyStoreServer = (options: ServerOptions): KeyStoreServer => {
   const wss = new WebSocketServer({
     server: options.server,
   });
@@ -210,6 +214,12 @@ const createKeyStoreServer = (options: ServerOptions) => {
       ws.close();
     }
   });
+
+  return {
+    get connections() {
+      return connections.length;
+    },
+  };
 };
 
 export { createKeyStoreServer };
