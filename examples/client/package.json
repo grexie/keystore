@@ -7,6 +7,6 @@
     "start": "ts-node --transpile-only src/index"
   },
   "dependencies": {
-    "@grexie/keystore-client": "0.1.13"
+    "@grexie/keystore-client": "*"
   }
 }
