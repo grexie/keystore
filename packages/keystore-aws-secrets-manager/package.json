@@ -1,6 +1,6 @@
 {
   "name": "@grexie/keystore-aws-secrets-manager",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "license": "MIT",
   "repository": "github:grexie/keystore/packages/keystore-aws-secrets-manager",
   "main": "lib/index.js",
@@ -14,7 +14,7 @@
     "aws-sdk": "^2.1091.0"
   },
   "peerDependencies": {
-    "@grexie/keystore": "^0.1.20",
+    "@grexie/keystore": "^0.1.21",
     "aws-sdk": "^2.1091.0"
   }
 }
