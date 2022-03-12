@@ -19,11 +19,12 @@
   },
   "release-it": {
     "plugins": {
-      "release-it-yarn-workspaces": true
+      "release-it-yarn-workspaces": {
+        "workspaces": [
+          "packages/*"
+        ]
+      }
     },
-    "workspaces": [
-      "packages/*"
-    ],
     "npm": false
   },
   "version": "0.1.12"
