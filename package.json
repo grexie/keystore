@@ -25,7 +25,6 @@
         ]
       }
     },
-    "verbose": true,
     "npm": false
   },
   "version": "0.1.16"
