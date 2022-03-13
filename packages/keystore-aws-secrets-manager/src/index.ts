@@ -160,10 +160,12 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
 
     await this.#publisher?.publish(`secret:${this.#name}`, '');
 
-    const secret = await this.#hydrator(Buffer.from(key.toString(), 'base64'));
-    this.emit('update', secret);
+    this.#secret = Promise.resolve(
+      this.#hydrator(Buffer.from(key.toString(), 'base64'))
+    );
+    this.emit('update', await this.#secret);
 
-    return secret;
+    return this.#secret;
   }
 
   async setSecret(secret: T | null) {
