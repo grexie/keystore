@@ -76,6 +76,7 @@ const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
     this.#secretId = id;
     this.#secret = Promise.resolve(this.#hydrator(key));
     this.emit('update', await this.#secret);
+    return this.#secret;
   }
 
   async setSecret(secret: T | null): Promise<T> {
@@ -85,8 +86,7 @@ const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
       return this.#secret;
     }
 
-    await this.#setSecret(key.id, key.key);
-    return this.#secret;
+    return this.#setSecret(key.id, key.key);
   }
 
   async rotateSecret(): Promise<T> {
@@ -100,7 +100,7 @@ const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
 
     const { key } = this.#secrets[id];
 
-    await this.#setSecret(id, key);
+    return this.#setSecret(id, key);
   }
 };
 

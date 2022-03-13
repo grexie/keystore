@@ -32,7 +32,7 @@ interface Request<M extends Method> {
 interface Response<T> {
   id: number;
   error?: string;
-  payload?: T;
+  payload?: T | null;
 }
 
 interface SetRequest<T> extends Request<Method.set> {
@@ -114,9 +114,12 @@ const serve = (options: ServerOptions, ws: WebSocket, key: string) => {
         return;
       }
       case Method.restore: {
-        await keyStore.restoreSecret((request as RestoreRequest).payload.id);
+        const secret = await keyStore.restoreSecret(
+          (request as RestoreRequest).payload.id
+        );
         send({
           id: request.id,
+          payload: secret,
         });
         return;
       }
@@ -145,9 +148,7 @@ const createKeyStoreServer = (options: ServerOptions): KeyStoreServer => {
       const data = JSON.stringify({
         method: 'notify',
         name,
-        payload: {
-          secret,
-        },
+        payload: secret,
       });
 
       connections.forEach(async ({ key, ws }) => {
@@ -194,9 +195,7 @@ const createKeyStoreServer = (options: ServerOptions): KeyStoreServer => {
           const data = JSON.stringify({
             method: 'notify',
             name,
-            payload: {
-              secret,
-            },
+            payload: secret,
           });
 
           if (await options.authenticate(key, Method.notify, name)) {

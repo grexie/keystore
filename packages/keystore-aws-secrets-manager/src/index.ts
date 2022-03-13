@@ -162,6 +162,8 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
 
     const secret = await this.#hydrator(Buffer.from(key.toString(), 'base64'));
     this.emit('update', secret);
+
+    return secret;
   }
 
   async setSecret(secret: T | null) {
@@ -171,9 +173,7 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
       return null;
     }
 
-    await this.#setSecret(key.id, key.key.toString('base64'));
-
-    return this.#hydrator(key.key);
+    return this.#setSecret(key.id, key.key.toString('base64'));
   }
 
   async rotateSecret() {
@@ -194,7 +194,7 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
       throw new Error(`secret ${this.#name}:${id} not found`);
     }
 
-    await this.#setSecret(id, response.SecretBinary);
+    return this.#setSecret(id, response.SecretBinary);
   }
 
   async #fetchSecret() {

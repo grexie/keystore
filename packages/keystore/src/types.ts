@@ -21,7 +21,7 @@ export interface KeyStore<T> extends EventEmitter {
   get secret(): Promise<T | null>;
   setSecret(secret: T | null): Promise<T | null>;
   rotateSecret(): Promise<T | null>;
-  restoreSecret(id: string): Promise<void>;
+  restoreSecret(id: string): Promise<T | null>;
 }
 
 export interface ProviderOptions<T> {

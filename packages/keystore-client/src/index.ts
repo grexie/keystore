@@ -17,7 +17,7 @@ interface KeyStoreClientAPI<T> extends EventEmitter {
   secret(name: string): Promise<T>;
   setSecret(name: string, secret: T): Promise<T>;
   rotateSecret(name: string): Promise<T>;
-  restoreSecret(name: string, id: string): Promise<void>;
+  restoreSecret(name: string, id: string): Promise<T>;
 }
 
 export class KeyStoreClient {
@@ -79,7 +79,7 @@ export class KeyStoreClient {
 
       if (message.method === 'notify') {
         this.#subscriptions[message.name]?.forEach(listener =>
-          listener(message.payload.secret)
+          listener(message.payload)
         );
       } else {
         const resolver = this.#requests[message.id];
@@ -166,8 +166,6 @@ export class KeyStoreClient {
 
     const iface: KeyStoreClientAPI<T> = Object.assign(emitter, {
       secret: async (name: string): Promise<T> => {
-        await this.#start();
-
         const payload = await this.#request<T>({
           method: 'get',
           name,
@@ -184,9 +182,7 @@ export class KeyStoreClient {
         const payload = await this.#request<T>({
           method: 'set',
           name,
-          payload: {
-            secret,
-          },
+          payload: secret,
         });
 
         if (this.#debug) {
@@ -209,18 +205,18 @@ export class KeyStoreClient {
         return payload;
       },
 
-      restoreSecret: async (name: string, id: string): Promise<void> => {
-        await this.#request<void>({
+      restoreSecret: async (name: string, id: string): Promise<T> => {
+        const payload = await this.#request<T>({
           method: 'restore',
           name,
-          payload: {
-            id,
-          },
+          payload: id,
         });
 
         if (this.#debug) {
           console.info(`restoreSecret(${name})`);
         }
+
+        return payload;
       },
     });
 
@@ -258,15 +254,18 @@ class ClientProvider<T> extends EventEmitter implements KeyStore<T> {
   }
 
   async setSecret(secret: T) {
-    return this.#client.setSecret(this.#name, secret);
+    this.#secret = this.#client.setSecret(this.#name, secret);
+    return this.#secret;
   }
 
   async rotateSecret() {
-    return this.#client.rotateSecret(this.#name);
+    this.#secret = this.#client.rotateSecret(this.#name);
+    return this.#secret;
   }
 
   async restoreSecret(id: string) {
-    return this.#client.restoreSecret(this.#name, id);
+    this.#secret = this.#client.restoreSecret(this.#name, id);
+    return this.#secret;
   }
 }
 
