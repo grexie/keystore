@@ -176,13 +176,16 @@ const createKeyStoreServer = (options: ServerOptions): KeyStoreServer => {
       }
 
       const connection = { key, ws };
-      connections.push(connection);
       ws.on('close', () => {
         const index = connections.indexOf(connection);
         if (index != -1) {
+          if (options.debug) {
+            console.info('deleting connection');
+          }
           connections.splice(index, 1);
         }
       });
+      connections.push(connection);
 
       options.keyStores.forEach(async ({ name, keyStore }) => {
         try {
