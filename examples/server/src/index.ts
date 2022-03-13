@@ -11,9 +11,9 @@ const createJSONKeyStore = createJSONKeyStoreFactory<any>({
   idField: 'id',
 });
 
-createKeyStoreServer({
+const server = createKeyStoreServer({
   server: httpServer,
-  debug: false,
+  debug: true,
   authenticate: async key => {
     if (key === 'AUTH_KEY') {
       return true;
@@ -59,6 +59,10 @@ createKeyStoreServer({
     },
   ],
 });
+
+setInterval(() => {
+  console.info(server.connections, 'active connections');
+}, 1_000);
 
 httpServer.listen(3000, () => {
   console.info('server listening on port 3000');

@@ -46,7 +46,6 @@ export class KeyStoreClient {
     if (this.#debug) {
       console.info('debug: on');
     }
-    this.#start();
   }
 
   #start(reconnecting = false) {
