@@ -36,15 +36,11 @@ interface Response<T> {
 }
 
 interface SetRequest<T> extends Request<Method.set> {
-  payload: {
-    secret: T;
-  };
+  payload: T;
 }
 
 interface RestoreRequest extends Request<Method.restore> {
-  payload: {
-    id: string;
-  };
+  payload: string;
 }
 
 const serve = (options: ServerOptions, ws: WebSocket, key: string) => {
@@ -97,7 +93,7 @@ const serve = (options: ServerOptions, ws: WebSocket, key: string) => {
       }
       case Method.set: {
         const secret = await keyStore.setSecret(
-          (request as SetRequest<any>).payload.secret
+          (request as SetRequest<any>).payload
         );
         send({
           id: request.id,
@@ -115,7 +111,7 @@ const serve = (options: ServerOptions, ws: WebSocket, key: string) => {
       }
       case Method.restore: {
         const secret = await keyStore.restoreSecret(
-          (request as RestoreRequest).payload.id
+          (request as RestoreRequest).payload
         );
         send({
           id: request.id,
