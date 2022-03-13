@@ -49,7 +49,7 @@ export class KeyStoreClient {
   }
 
   #start(reconnecting = false) {
-    if (this.#running) {
+    if (this.#running || this.#shutdown) {
       return;
     }
     this.#running = true;
@@ -101,9 +101,7 @@ export class KeyStoreClient {
       this.#ws = undefined;
       if (!this.#shutdown) {
         setTimeout(() => {
-          if (!this.#shutdown) {
-            this.#start(true);
-          }
+          this.#start(true);
         }, 1000);
       }
     });
@@ -116,9 +114,7 @@ export class KeyStoreClient {
       this.#ws = undefined;
       if (!this.#shutdown) {
         setTimeout(() => {
-          if (!this.#shutdown) {
-            this.#start(true);
-          }
+          this.#start(true);
         }, 1000);
       }
     });
