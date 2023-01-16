@@ -6,8 +6,7 @@ import {
   KeyStore,
 } from '@grexie/keystore';
 import { EventEmitter } from 'events';
-import { AWSError, SecretsManager } from 'aws-sdk';
-import { SecretBinaryType } from 'aws-sdk/clients/secretsmanager';
+import type { SecretsManager } from '@aws-sdk/client-secrets-manager';
 
 interface PubSub {
   subscribe: (
@@ -126,36 +125,30 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
 
   async #exists() {
     try {
-      await this.#secretsManager
-        .describeSecret({
-          SecretId: this.#name,
-        })
-        .promise();
+      await this.#secretsManager.describeSecret({
+        SecretId: this.#name,
+      });
       return true;
     } catch (err) {
       return false;
     }
   }
 
-  async #setSecret(id: string, key: SecretBinaryType) {
+  async #setSecret(id: string, key: Buffer) {
     await this.#start();
 
     if (await this.#exists()) {
-      await this.#secretsManager
-        .putSecretValue({
-          SecretId: this.#name,
-          SecretBinary: key,
-          ...(id ? { ClientRequestToken: id } : {}),
-        })
-        .promise();
+      await this.#secretsManager.putSecretValue({
+        SecretId: this.#name,
+        SecretBinary: key,
+        ...(id ? { ClientRequestToken: id } : {}),
+      });
     } else {
-      await this.#secretsManager
-        .createSecret({
-          Name: this.#name,
-          SecretBinary: key,
-          ClientRequestToken: id,
-        })
-        .promise();
+      await this.#secretsManager.createSecret({
+        Name: this.#name,
+        SecretBinary: key,
+        ClientRequestToken: id,
+      });
     }
 
     await this.#publisher?.publish(`secret:${this.#name}`, '');
@@ -175,7 +168,7 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
       return null;
     }
 
-    return this.#setSecret(key.id, key.key.toString('base64'));
+    return this.#setSecret(key.id, key.key);
   }
 
   async rotateSecret() {
@@ -185,27 +178,23 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
   async restoreSecret(id: string) {
     await this.#start();
 
-    const response = await this.#secretsManager
-      .getSecretValue({
-        SecretId: this.#name,
-        VersionId: id,
-      })
-      .promise();
+    const response = await this.#secretsManager.getSecretValue({
+      SecretId: this.#name,
+      VersionId: id,
+    });
 
     if (!response.SecretBinary) {
       throw new Error(`secret ${this.#name}:${id} not found`);
     }
 
-    return this.#setSecret(id, response.SecretBinary);
+    return this.#setSecret(id, Buffer.from(response.SecretBinary));
   }
 
   async #fetchSecret() {
     try {
-      const response = await this.#secretsManager
-        .getSecretValue({
-          SecretId: this.#name,
-        })
-        .promise();
+      const response = await this.#secretsManager.getSecretValue({
+        SecretId: this.#name,
+      });
 
       if (response.SecretString == '::initial') {
         return this.rotateSecret();
@@ -217,11 +206,11 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
 
       return this.#hydrator(
         response.SecretBinary
-          ? Buffer.from(response.SecretBinary.toString(), 'base64')
+          ? Buffer.from(response.SecretBinary)
           : Buffer.from(response.SecretString!, 'utf8')
       );
-    } catch (err) {
-      if ((err as AWSError).statusCode == 404) {
+    } catch (err: any) {
+      if (err.statusCode == 404) {
         return this.rotateSecret();
       } else {
         throw err;

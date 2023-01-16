@@ -3,7 +3,8 @@
   "version": "0.1.25",
   "license": "MIT",
   "repository": "github:grexie/keystore/packages/keystore-web3",
-  "main": "lib/index.js",
+  "type": "module",
+  "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "yarn build:esm && yarn build:cjs",
