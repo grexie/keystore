@@ -1,6 +1,6 @@
 {
   "name": "@grexie/keystore",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "license": "MIT",
   "repository": "github:grexie/keystore/packages/keystore",
   "type": "module",
