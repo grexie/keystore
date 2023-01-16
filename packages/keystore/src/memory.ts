@@ -4,7 +4,7 @@ import {
   Hydrator,
   KeyStore,
   ProviderOptions,
-} from './types';
+} from './types.js';
 import { EventEmitter } from 'events';
 
 interface MemoryProviderOptions<T = any> {
