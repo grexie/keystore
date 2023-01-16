@@ -1,6 +1,6 @@
 {
   "name": "@grexie/keystore-aws-secrets-manager",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "license": "MIT",
   "repository": "github:grexie/keystore/packages/keystore-aws-secrets-manager",
   "type": "module",
@@ -15,7 +15,7 @@
     "@aws-sdk/client-secrets-manager": "^3.250.0"
   },
   "peerDependencies": {
-    "@grexie/keystore": "^0.1.26",
+    "@grexie/keystore": "^0.1.27",
     "@aws-sdk/client-secrets-manager": "^3.250.0"
   }
 }
