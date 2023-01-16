@@ -1,6 +1,6 @@
 {
   "name": "@grexie/keystore-rsa",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "license": "MIT",
   "repository": "github:grexie/keystore/packages/keystore-rsa",
   "type": "module",
@@ -12,6 +12,6 @@
     "build:cjs": "tsc --module commonjs --outDir lib/cjs"
   },
   "peerDependencies": {
-    "@grexie/keystore": "^0.1.27"
+    "@grexie/keystore": "^0.1.28"
   }
 }
