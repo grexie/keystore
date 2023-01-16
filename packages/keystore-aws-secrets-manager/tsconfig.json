@@ -15,7 +15,8 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "allowSyntheticDefaultImports": true,
-    "composite": true
+    "composite": true,
+    "inlineSourceMap": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "lib"],
