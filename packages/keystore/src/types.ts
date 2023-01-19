@@ -20,6 +20,7 @@ export interface Persistor<T> {
 export interface KeyStore<T> extends EventEmitter {
   get secret(): Promise<T | null>;
   setSecret(secret: T | null): Promise<T | null>;
+  fetchSecret(id: string): Promise<T>;
   rotateSecret(): Promise<T | null>;
   restoreSecret(id: string): Promise<T | null>;
 }

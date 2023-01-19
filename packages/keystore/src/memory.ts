@@ -102,6 +102,15 @@ const MemoryProvider: Provider<MemoryProviderOptions> = class<T>
 
     return this.#setSecret(id, key);
   }
+
+  async fetchSecret(id: string) {
+    if (!this.#secrets[id]) {
+      throw new Error(`secret ${id} not found`);
+    }
+
+    const { key } = this.#secrets[id];
+    return Promise.resolve(this.#hydrator(key));
+  }
 };
 
 export { MemoryProvider };

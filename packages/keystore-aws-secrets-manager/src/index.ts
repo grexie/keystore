@@ -153,9 +153,7 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
 
     await this.#publisher?.publish(`secret:${this.#name}`, '');
 
-    this.#secret = Promise.resolve(
-      this.#hydrator(Buffer.from(key.toString(), 'base64'))
-    );
+    this.#secret = Promise.resolve(this.#hydrator(Buffer.from(key)));
     this.emit('update', await this.#secret);
 
     return this.#secret;
@@ -188,6 +186,21 @@ const SecretsManagerProvider: Provider<SecretsManagerProviderOptions> = class<T>
     }
 
     return this.#setSecret(id, Buffer.from(response.SecretBinary));
+  }
+
+  async fetchSecret(id: string): Promise<T> {
+    await this.#start();
+
+    const response = await this.#secretsManager.getSecretValue({
+      SecretId: this.#name,
+      VersionId: id,
+    });
+
+    if (!response.SecretBinary) {
+      throw new Error(`secret ${this.#name}:${id} not found`);
+    }
+
+    return Promise.resolve(this.#hydrator(Buffer.from(response.SecretBinary)));
   }
 
   async #fetchSecret() {
