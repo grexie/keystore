@@ -16,6 +16,7 @@ interface ClientProviderOptions<T> {
 interface KeyStoreClientAPI<T> extends EventEmitter {
   secret(name: string): Promise<T>;
   setSecret(name: string, secret: T): Promise<T>;
+  fetchSecret(name: string): Promise<T>;
   rotateSecret(name: string): Promise<T>;
   restoreSecret(name: string, id: string): Promise<T>;
 }
@@ -192,6 +193,19 @@ export class KeyStoreClient {
         return payload;
       },
 
+      fetchSecret: async (name: string): Promise<T> => {
+        const payload = await this.#request<T>({
+          method: 'get',
+          name,
+        });
+
+        if (this.#debug) {
+          console.info(`fetchSecret(${name}):`, payload);
+        }
+
+        return payload;
+      },
+
       rotateSecret: async (name: string): Promise<T> => {
         const payload = await this.#request<T>({
           method: 'rotate',
@@ -251,6 +265,10 @@ class ClientProvider<T> extends EventEmitter implements KeyStore<T> {
     }
 
     return this.#secret;
+  }
+
+  async fetchSecret(name: string) {
+    return this.#client.fetchSecret(name);
   }
 
   async setSecret(secret: T) {
